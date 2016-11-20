@@ -48,6 +48,15 @@ the stretch goals add two more components
 
 For the component design I'm going to use the 9 states technique.
 
+Test
+----
+I've used tox for test (https://tox.readthedocs.io/en/latest/), for the following reasons:
+
+- compatible with circleCI
+- possibility to assert a coverage level (test will non pass if coverage is under 100%)
+- possibility to assert the use of the standard PEP8 using the linter flake8 (code written underc convention is easier to read)
+
+
 
 cookiecutter docs
 =================

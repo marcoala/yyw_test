@@ -11,12 +11,16 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 from __future__ import absolute_import, unicode_literals
 
 import environ
+import dj_database_url
 
 ROOT_DIR = environ.Path(__file__) - 3  # (yyw_test/config/settings/common.py - 3 = yyw_test/)
 APPS_DIR = ROOT_DIR.path('yyw_test')
 
 env = environ.Env()
-env.read_env()
+try:
+    env.read_env(ROOT_DIR.file('.env'))
+except FileNotFoundError:
+    pass
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -46,8 +50,11 @@ THIRD_PARTY_APPS = (
 # Apps specific for this project go here.
 LOCAL_APPS = (
     # custom users app
-    'yyw_test.users.apps.UsersConfig',
+    #'yyw_test.users.apps.UsersConfig',
     # Your stuff: custom apps go here
+    'yyw_test.common',
+    'yyw_test.integrations.openweathermap',
+    'yyw_test.citytemperature',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -100,8 +107,10 @@ MANAGERS = ADMINS
 # DATABASE CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
+DATABASE_URL = env('DATABASE_URL')
+
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres:///yyw_test'),
+    'default': dj_database_url.parse(str(DATABASE_URL)),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
@@ -230,19 +239,19 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # Some really nice defaults
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-
-ACCOUNT_ALLOW_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
-ACCOUNT_ADAPTER = 'yyw_test.users.adapters.AccountAdapter'
-SOCIALACCOUNT_ADAPTER = 'yyw_test.users.adapters.SocialAccountAdapter'
+# ACCOUNT_AUTHENTICATION_METHOD = 'username'
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+#
+# ACCOUNT_ALLOW_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
+# ACCOUNT_ADAPTER = 'yyw_test.users.adapters.AccountAdapter'
+# SOCIALACCOUNT_ADAPTER = 'yyw_test.users.adapters.SocialAccountAdapter'
 
 # Custom user app defaults
 # Select the correct user model
-AUTH_USER_MODEL = 'users.User'
-LOGIN_REDIRECT_URL = 'users:redirect'
-LOGIN_URL = 'account_login'
+# AUTH_USER_MODEL = 'users.User'
+# LOGIN_REDIRECT_URL = 'users:redirect'
+# LOGIN_URL = 'account_login'
 
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
