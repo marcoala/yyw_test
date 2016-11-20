@@ -40,7 +40,8 @@ pytz==2016.7
 django-redis==4.6.0
 redis>=2.10.5
 
-
+# better json library
+ujson==1.35
 
 
 
