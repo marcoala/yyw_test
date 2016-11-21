@@ -20,7 +20,7 @@ class TestSearch(TestCase):
 
     def setUp(self):
         for row in CITY_LIST:
-            city = City(external_id=row.external_id, name=row.name, country=row.country)
+            city = City(external_id=row['external_id'], name=row['name'], country=row['country'])
             city.save()
 
     def test_corrects_results_in_list(self):
@@ -44,24 +44,29 @@ class TestSearch(TestCase):
 
 class TestCurrentTemperature(TestCase):
 
-    def test_stuff(self):
+    def setUp(self):
+        city = City(external_id=123, name='Example city', country='GB')
+        city.save()
+        self.city = city
+
+    def test_basic_usage(self):
         example_forecast = []
         for c in range(0, 15):
             day = {
-                'day': date(1, 6, 2016) + timedelta(days=c),
+                'day': date(day=1, month=6, year=2016) + timedelta(days=c),
                 'day': 20,
                 'min': 20,
-                'max': 22,
+                'max': 24,
                 'night': 22,
-                'eve': 24,
+                'eve': 22,
                 'morn': 24,
                 'humidity': 99
             }
             example_forecast.append(day)
         module_name = 'yyw_test.integrations.openweathermap.api'
-        with patch('{}.fetch_temperature_forecast_by_city_id'.format(module_name)) as mock_fetch:
+        with patch('{}.fetch_temperature_and_humidity_forecast_by_city_id'.format(module_name)) as mock_fetch:
             mock_fetch.return_value = example_forecast
-            today = get_current_temperatures_and_humidity_by_city_id(123)
+            today = get_current_temperatures_and_humidity_by_city_id(self.city.id)
             self.assertEqual(today['max'], 24)
             self.assertEqual(today['min'], 20)
             self.assertEqual(today['average'], 22)
