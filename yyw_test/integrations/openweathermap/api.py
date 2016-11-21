@@ -37,9 +37,9 @@ def get_current_temperatures_and_humidity_by_city_id(city_id):
     print(temperature)
     {
         'max': 26,
-        'mix': 18,
+        'min': 18,
         'average': 24,
-        'humidity':
+        'humidity': 98
     }
     """
     city = City.objects.get(pk=city_id)
