@@ -262,3 +262,4 @@ ADMIN_URL = r'^admin/'
 
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
+OPENWEATHERMAP_API_KEY = env('OPENWEATHERMAP_API_KEY', default='12345')

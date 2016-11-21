@@ -1,7 +1,7 @@
 import ujson as json
 from os.path import join, dirname
 from django.test import TestCase
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 from datetime import date
 
 from yyw_test.integrations.openweathermap.utils import fetch_temperature_and_humidity_forecast_by_city_id
@@ -19,13 +19,15 @@ def _get_data_from_file(filename):
 class TestFetchForecast(TestCase):
 
     def test_standard_reponse(self):
+        mock = Mock(status_code=200)
+        mock.json.return_value = _get_data_from_file('forecast_response.json')
         module_name = 'yyw_test.integrations.openweathermap.utils'
-        with patch('{}.requests.get'.format(module_name)) as mock_request:
-            mock_request.json.return_value = _get_data_from_file('forecast_response.json')
+        with patch('{}.requests.get'.format(module_name)) as mock_get:
+            mock_get.return_value = mock
             fetched_data = fetch_temperature_and_humidity_forecast_by_city_id(123)
             self.assertEqual(len(fetched_data), 16)
             first_day = fetched_data[0]
-            self.assertEqual(first_day['date'], date(20, 11, 2016))
+            self.assertEqual(first_day['date'], date(day=20, month=11, year=2016))
             self.assertEqual(first_day['day'], 5)
             self.assertEqual(first_day['min'], 5)
             self.assertEqual(first_day['max'], 5.1)

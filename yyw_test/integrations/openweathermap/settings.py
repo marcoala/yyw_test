@@ -1,4 +1,4 @@
-from django.conf.settings import OPENWEATHERMAP_API_KEY
+from django.conf import settings
 
-API_KEY = OPENWEATHERMAP_API_KEY
+API_KEY = settings.OPENWEATHERMAP_API_KEY
 DAILY_FORECAST_ENDPOINT = 'http://api.openweathermap.org/data/2.5/forecast/daily'

@@ -1,4 +1,5 @@
 import requests
+from datetime import date
 from .settings import API_KEY, DAILY_FORECAST_ENDPOINT
 
 
@@ -33,5 +34,21 @@ def fetch_temperature_and_humidity_forecast_by_city_id(city_id):
         'cnt': 16,
         'units': 'metric'
     }
-    raw = requests.get(DAILY_FORECAST_ENDPOINT, params=params)
-    pass
+    response = requests.get(DAILY_FORECAST_ENDPOINT, params=params)
+    # at this pint I should check the http repsonse (code is 200, that the response it not empty
+    raw = response.json()
+    raw_daily_forecast = raw['list']
+    daily_forecast = []
+    for row in raw_daily_forecast:
+        day = {
+            'date': date.fromtimestamp(row['dt']),
+            'day': row['temp']['day'],
+            'min': row['temp']['min'],
+            'max': row['temp']['max'],
+            'night': row['temp']['night'],
+            'eve': row['temp']['eve'],
+            'morn': row['temp']['morn'],
+            'humidity': row['humidity']
+        }
+        daily_forecast.append(day)
+    return daily_forecast
