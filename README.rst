@@ -25,24 +25,26 @@ Backend structure
 
 The name of the app is yyw_test and this will be internal module structure:
 
-yyw_test
- - common
- - integrations
-     - openweathermap
- - citytemperature
+- yyw_test
+    - common
+    - integrations
+        - openweathermap
+    - citytemperature
 
-To avoid circular dependency every module can only import form a module above in the list, for `example` every module can import from common but common can't import from any module.
+To avoid circular dependency every module can only import form a module above in the list, for example every module can import from `common` but common can't import from any module.
 
-The module `openweathermap` will contain the integration with the external system but the module `citytemperature` will be agnostic on which external service is used, allowing to change service in the future. Nevertheless a complete separation of concern in this case could be a premature optimisation.
+The module `openweathermap` will contain the integration with the external system but the module `citytemperature` will be agnostic on which external service is used, allowing to change service in the future. Nevertheless a excessive abstraction in this case could be a premature optimisation.
 
 Frontend structure
 ------------------
 
 Only two component should be needed:
+
 - Search box with autocomplete (for the city)
 - temperature visualisation
 
 the stretch goals add two more components
+
 - temperature graph visualisation
 - data range selection
 
@@ -54,8 +56,9 @@ I've used tox for test (https://tox.readthedocs.io/en/latest/), for the followin
 
 - compatible with circleCI
 - possibility to assert a coverage level (test will non pass if coverage is under 100%)
-- possibility to assert the use of the standard PEP8 using the linter flake8 (code written underc convention is easier to read)
+- possibility to assert the use of the standard PEP8 using the linter flake8 (code written under conventions is easier to read)
 
+all the tests are inside the folder `/tests`.
 
 
 cookiecutter docs
