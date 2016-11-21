@@ -14,13 +14,17 @@ var gulp = require('gulp'),
       del = require('del'),
       plumber = require('gulp-plumber'),
       pixrem = require('gulp-pixrem'),
+      source = require('vinyl-source-stream'),
       uglify = require('gulp-uglify'),
-      imagemin = require('gulp-imagemin'),
+      browserify = require('browserify'),
+      babelify = require('babelify'),
+      // imagemin = require('gulp-imagemin'),
       exec = require('child_process').exec,
       runSequence = require('run-sequence'),
       browserSync = require('browser-sync').create(),
-      reload = browserSync.reload;
-
+      reload = browserSync.reload,
+      streamify = require('gulp-streamify'),
+      plugins = require('gulp-load-plugins')();
 
 // Relative paths function
 var pathsConfig = function (appName) {
@@ -57,10 +61,18 @@ gulp.task('styles', function() {
 });
 
 // Javascript minification
+babelify = babelify.configure({
+    plugins: ["transform-class-properties", "transform-function-bind"],
+    presets: ['es2015', 'react']
+});
+
 gulp.task('scripts', function() {
-  return gulp.src(paths.js + '/project.js')
+    browserify([paths.js + '/project.js'])
+    .transform([babelify])
+    .bundle()
+    .pipe(source('project.js'))
     .pipe(plumber()) // Checks for errors
-    .pipe(uglify()) // Minifies the js
+    .pipe(streamify(uglify())) // Minifies the js
     .pipe(rename({ suffix: '.min' }))
     .pipe(gulp.dest(paths.js));
 });
@@ -90,7 +102,8 @@ gulp.task('browserSync', function() {
 
 // Default task
 gulp.task('default', function() {
-    runSequence(['styles', 'scripts', 'imgCompression'], 'runServer', 'browserSync');
+    // runSequence(['styles', 'script_bablel', 'scripts', 'imgCompression'], 'runServer', 'browserSync');
+    runSequence('styles', 'scripts');
 });
 
 ////////////////////////////////
@@ -102,7 +115,7 @@ gulp.task('watch', ['default'], function() {
 
   gulp.watch(paths.sass + '/*.scss', ['styles']);
   gulp.watch(paths.js + '/*.js', ['scripts']).on("change", reload);
-  gulp.watch(paths.images + '/*', ['imgCompression']);
+  gulp.watch(paths.js + '/components/*.js', ['scripts']).on("change", reload);
   gulp.watch(paths.templates + '/**/*.html').on("change", reload);
 
 });

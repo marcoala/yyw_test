@@ -1,1 +1,21 @@
 {% extends "base.html" %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="jumbotron">
+              <h1 class="display-3">City Temperature</h1>
+              <p class="lead">Input the name of a city in the box below to visualize the temperature and humidity in that city today.</p>
+              <hr class="my-2">
+              <p>This is a simple weather app, build by Marco Alabruzzo as tech test for yoyoWallet. </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <div id="search"></div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <div id="visualise-weather"></div>
+        </div>
+    </div>
+{% endblock content %}

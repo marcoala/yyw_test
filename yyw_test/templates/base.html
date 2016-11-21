@@ -20,7 +20,7 @@
     <!-- Your stuff: Third-party CSS libraries go here -->
 
     <!-- This file stores project-specific CSS -->
-    <link href="{% static 'css/project.css' %}" rel="stylesheet">
+    <link href="{% static 'css/project.min.css' %}" rel="stylesheet">
 
     {% endblock %}
 
@@ -39,7 +39,7 @@
       {% block content %}
         <p>Use this document as a way to quick start any new project.</p>
       {% endblock content %}
-
+      <script src="{% static 'js/project.min.js' %}"></script>
     </div> <!-- /container -->
   </body>
 </html>
